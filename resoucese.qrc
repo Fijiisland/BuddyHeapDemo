@@ -1,0 +1,48 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>share/images/close.png</file>
+        <file>share/images/loading.gif</file>
+        <file>share/images/mini.png</file>
+        <file>share/images/zoom.png</file>
+        <file>share/images/left_up.ico</file>
+        <file>share/images/icon.png</file>
+        <file>share/images/setmem_hover.png</file>
+        <file>share/images/setmem_press.png</file>
+        <file>share/images/setmem_regular.png</file>
+        <file>share/images/addjob_hover.png</file>
+        <file>share/images/addjob_press.png</file>
+        <file>share/images/addjob_regular.png</file>
+        <file>share/images/close1.png</file>
+        <file>share/images/close-1.png</file>
+        <file>share/images/mini1.png</file>
+        <file>share/images/mini-1.png</file>
+        <file>share/images/visualize.png</file>
+        <file>share/images/visualize1.png</file>
+        <file>share/images/visualize-1.png</file>
+        <file>share/images/BIGLOGO.png</file>
+        <file>share/images/work.png</file>
+        <file>share/images/work1.png</file>
+        <file>share/images/work-1.png</file>
+        <file>share/images/others1.png</file>
+        <file>share/images/others-1.png</file>
+        <file>share/images/others.png</file>
+        <file>share/images/affinity-designe.png</file>
+        <file>share/images/Motion.png</file>
+        <file>share/images/ps.png</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file>share/fonts/SF-Pro-Display-Regular.otf</file>
+        <file>share/fonts/SF-Pro-Display-Thin.otf</file>
+        <file>share/fonts/SF-Pro-Display-Ultralight.otf</file>
+    </qresource>
+    <qresource prefix="/styleSheets">
+        <file>share/styleSheets/theme1.qss</file>
+        <file>share/styleSheets/theme2.qss</file>
+        <file>share/styleSheets/theme3.qss</file>
+        <file>share/styleSheets/theme4.qss</file>
+        <file>share/styleSheets/theme5.qss</file>
+        <file>share/styleSheets/theme6.qss</file>
+        <file>share/styleSheets/theme7.qss</file>
+        <file>share/styleSheets/theme8.qss</file>
+    </qresource>
+</RCC>
