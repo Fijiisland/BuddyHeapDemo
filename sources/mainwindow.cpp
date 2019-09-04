@@ -132,7 +132,7 @@ void mainwindow::setAllVisiualizeBtnsUnchecked()
 
 void mainwindow::setModulesStyle()
 {
-    ui->frame->setStyleSheet("#frame{border:1.4px solid #BEBEBE}#background-color:#D3D3D3");
+    ui->frame->setStyleSheet("#frame{border:1.4px solid #BEBEBE}#background-color:#FFFFFF");
     this->setWindowFlags(Qt::FramelessWindowHint);
     int fontID1 = QFontDatabase::addApplicationFont(FONTSPATH+"SF-Pro-Display-Ultralight.otf");
     int fontID2 = QFontDatabase::addApplicationFont(FONTSPATH+"SF-Pro-Display-Regular.otf");
@@ -377,7 +377,7 @@ void mainwindow::startOthersPageAnimation()
         propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
     }
 }
-
+/*
 void mainwindow::themeSetNStartAnimation(THEME_TYPE startType, THEME_TYPE endType)
 {
     propertyAnimation = new QPropertyAnimation(ui->widget_7, "styleSheet");
@@ -398,7 +398,7 @@ void mainwindow::themeSetNStartAnimation(THEME_TYPE startType, THEME_TYPE endTyp
     propertyAnimation->setEasingCurve(QEasingCurve::OutCubic);
     propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
 }
-
+*/
 void mainwindow::on_pushBtn_work_clicked(bool checked)
 {
     ui->pushBtn_visualize->setChecked(false);
@@ -440,14 +440,11 @@ void mainwindow::on_pushButton_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton->setChecked(true);
-    /*
     QFile styleLoader(STYLESHEETSPATH+"theme1.qss");
     styleLoader.open(QFile::ReadOnly);
     QString theme1 = tr(styleLoader.readAll());
     styleLoader.close();
     ui->widget_7->setStyleSheet(theme1);
-    */
-    themeSetNStartAnimation(currentThemeType, THEME_TYPE::THEME1);
     currentThemeType = THEME_TYPE::THEME1;
 }
 
@@ -455,14 +452,11 @@ void mainwindow::on_pushButton_3_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_3->setChecked(true);
-    /*
     QFile styleLoader(STYLESHEETSPATH+"theme3.qss");
     styleLoader.open(QFile::ReadOnly);
     QString theme3 = tr(styleLoader.readAll());
     styleLoader.close();
     ui->widget_7->setStyleSheet(theme3);
-    */
-    themeSetNStartAnimation(currentThemeType, THEME_TYPE::THEME3);
     currentThemeType = THEME_TYPE::THEME3;
 }
 
@@ -531,7 +525,7 @@ void mainwindow::on_pushButton_8_clicked(bool checked)
     styleLoader.close();
     ui->widget_7->setStyleSheet(theme8);
 }
-
+/*
 QString mainwindow::getStyleSheet()
 {
     return targetStyleSheet;
@@ -541,3 +535,4 @@ void mainwindow::setStyleSheet(QString styleSheet)
 {
     ui->widget_7->setStyleSheet(styleSheet);
 }
+*/

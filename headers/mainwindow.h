@@ -14,7 +14,7 @@ class mainwindow;
 class mainwindow : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QString styleSheet READ getStyleSheet WRITE setStyleSheet)
+    Q_PROPERTY(QString myStyleSheet WRITE setMyStyleSheet)
 
 public:
     explicit mainwindow(QWidget *parent = nullptr);
@@ -76,15 +76,13 @@ private:
     THEME_TYPE             currentThemeType;
     QString                targetStyleSheet;
 private:
-    QString getStyleSheet();
-    void          setStyleSheet(const QString styleSheet);
     void          hide_modules();
     void          setAllVisiualizeBtnsUnchecked();
     void          setModulesStyle();
     void          setAnimation();
     void          startWorkPageAnimation();
     void          startOthersPageAnimation();
-    void          themeSetNStartAnimation(THEME_TYPE startType, THEME_TYPE endType);
+    //void          themeSetNStartAnimation(THEME_TYPE startType, THEME_TYPE endType);
 };
 
 #endif // MAINWINDOW_H
