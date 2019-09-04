@@ -1,2 +1,2 @@
 # BuddyHeapDemo
-An algorithm design work.
+An algorithm designing work.
