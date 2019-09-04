@@ -4,6 +4,9 @@
 #include <QWidget>
 #include "_utility.h"
 
+enum THEME_TYPE{THEME1, THEME2, THEME3, THEME4,
+                 THEME5, THEME6, THEME7, THEME8};
+
 namespace Ui {
 class mainwindow;
 }
@@ -11,6 +14,7 @@ class mainwindow;
 class mainwindow : public QWidget
 {
     Q_OBJECT
+    Q_PROPERTY(QString styleSheet READ getStyleSheet WRITE setStyleSheet)
 
 public:
     explicit mainwindow(QWidget *parent = nullptr);
@@ -59,8 +63,8 @@ private:
     QMovie                 *loading_mov;
     QTimer                 *launcher_timer;
     QTimer                 *show_timer;
-    QGraphicsOpacityEffect *fade_effect_GPE;
-    QPropertyAnimation     *fade_effect_PA;
+    QGraphicsOpacityEffect *opacityEffect;
+    QPropertyAnimation     *propertyAnimation;
     QPoint                 m_startPoint;
     QPoint                 m_windowPoint;
     bool                   m_move;
@@ -68,13 +72,19 @@ private:
     const QString          STYLESHEETSPATH;
     const QString          FONTSPATH;
     const QString          IMAGESPATH;
+    const QString          themes[8];
+    THEME_TYPE             currentThemeType;
+    QString                targetStyleSheet;
 private:
-    void hide_modules();
-    void setAllVisiualizeBtnsUnchecked();
-    void setModulesStyle();
-    void setAnimation();
-    void startWorkPageAnimation();
-    void startOthersPageAnimation();
+    QString getStyleSheet();
+    void          setStyleSheet(const QString styleSheet);
+    void          hide_modules();
+    void          setAllVisiualizeBtnsUnchecked();
+    void          setModulesStyle();
+    void          setAnimation();
+    void          startWorkPageAnimation();
+    void          startOthersPageAnimation();
+    void          themeSetNStartAnimation(THEME_TYPE startType, THEME_TYPE endType);
 };
 
 #endif // MAINWINDOW_H

@@ -2,6 +2,8 @@
 
 #include <QPushButton>
 
+#include <QDebug>
+
 #include <QLabel>
 
 #include <QMovie>
@@ -23,3 +25,5 @@
 #include <QPainter>
 
 #include <QFile>
+
+#include <QColor>

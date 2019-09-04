@@ -6,7 +6,9 @@ mainwindow::mainwindow(QWidget *parent) :
     ui(new Ui::mainwindow),
     STYLESHEETSPATH(":/styleSheets/share/styleSheets/"),
     FONTSPATH(":/fonts/share/fonts/"),
-    IMAGESPATH(":/images/share/images/")
+    IMAGESPATH(":/images/share/images/"),
+    themes{"theme1.qss","theme2.qss","theme3.qss","theme4.qss","theme5.qss","theme6.qss","theme7.qss","theme8.qss",},
+    currentThemeType(THEME_TYPE::THEME1)
 {
     ui->setupUi(this);
     setModulesStyle();
@@ -66,9 +68,9 @@ void mainwindow::mouseReleaseEvent(QMouseEvent *event)
 void mainwindow::start_fade_animation()
 {
     launcher_timer->stop();
-    fade_effect_PA->setStartValue(1);
-    fade_effect_PA->setEndValue(0);
-    fade_effect_PA->start(QAbstractAnimation::KeepWhenStopped);
+    propertyAnimation->setStartValue(1);
+    propertyAnimation->setEndValue(0);
+    propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
     show_timer = new QTimer;
     show_timer->start(1000);
     connect(show_timer, SIGNAL(timeout()), this, SLOT(show_modules()));
@@ -336,12 +338,12 @@ void mainwindow::setAnimation()
     ui->label_loading->setMovie(loading_mov);
     loading_mov->start();
 
-    fade_effect_GPE = new QGraphicsOpacityEffect(ui->widget_2);
-    fade_effect_GPE->setOpacity(1);
-    ui->widget_2->setGraphicsEffect(fade_effect_GPE);
-    fade_effect_PA = new QPropertyAnimation(fade_effect_GPE, "opacity", this);
-    fade_effect_PA->setEasingCurve(QEasingCurve::Linear);
-    fade_effect_PA->setDuration(250);
+    opacityEffect = new QGraphicsOpacityEffect(ui->widget_2);
+    opacityEffect->setOpacity(1);
+    ui->widget_2->setGraphicsEffect(opacityEffect);
+    propertyAnimation = new QPropertyAnimation(opacityEffect, "opacity", this);
+    propertyAnimation->setEasingCurve(QEasingCurve::Linear);
+    propertyAnimation->setDuration(250);
     launcher_timer = new QTimer;
     launcher_timer->start(4000);
     connect(launcher_timer, SIGNAL(timeout()), this, SLOT(start_fade_animation()));
@@ -349,31 +351,52 @@ void mainwindow::setAnimation()
 
 void mainwindow::startWorkPageAnimation()
 {
-    fade_effect_GPE = new QGraphicsOpacityEffect(ui->label_7);
-    fade_effect_GPE->setOpacity(0);
-    ui->label_7->setGraphicsEffect(fade_effect_GPE);
-    fade_effect_PA = new QPropertyAnimation(fade_effect_GPE, "opacity",ui->widget_3);
-    fade_effect_PA->setEasingCurve(QEasingCurve::Linear);
-    fade_effect_PA->setDuration(500);
-    fade_effect_PA->setStartValue(0);
-    fade_effect_PA->setEndValue(1);
-    fade_effect_PA->start(QAbstractAnimation::KeepWhenStopped);
+    opacityEffect = new QGraphicsOpacityEffect(ui->label_7);
+    opacityEffect->setOpacity(0);
+    ui->label_7->setGraphicsEffect(opacityEffect);
+    propertyAnimation = new QPropertyAnimation(opacityEffect, "opacity",ui->widget_3);
+    propertyAnimation->setEasingCurve(QEasingCurve::Linear);
+    propertyAnimation->setDuration(500);
+    propertyAnimation->setStartValue(0);
+    propertyAnimation->setEndValue(1);
+    propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
 }
 static bool othersPageAnimationShowed = false;
 void mainwindow::startOthersPageAnimation()
 {
     if(!othersPageAnimationShowed){
         othersPageAnimationShowed = true;
-        fade_effect_GPE = new QGraphicsOpacityEffect();
-        fade_effect_GPE->setOpacity(0);
-        ui->label_22->setGraphicsEffect(fade_effect_GPE);
-        fade_effect_PA = new QPropertyAnimation(fade_effect_GPE, "opacity",ui->widget_5);
-        fade_effect_PA->setEasingCurve(QEasingCurve::Linear);
-        fade_effect_PA->setDuration(2000);
-        fade_effect_PA->setStartValue(0);
-        fade_effect_PA->setEndValue(1);
-        fade_effect_PA->start(QAbstractAnimation::KeepWhenStopped);
+        opacityEffect = new QGraphicsOpacityEffect;
+        opacityEffect->setOpacity(0);
+        ui->label_22->setGraphicsEffect(opacityEffect);
+        propertyAnimation = new QPropertyAnimation(opacityEffect, "opacity",ui->widget_5);
+        propertyAnimation->setEasingCurve(QEasingCurve::Linear);
+        propertyAnimation->setDuration(2000);
+        propertyAnimation->setStartValue(0);
+        propertyAnimation->setEndValue(1);
+        propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
     }
+}
+
+void mainwindow::themeSetNStartAnimation(THEME_TYPE startType, THEME_TYPE endType)
+{
+    propertyAnimation = new QPropertyAnimation(ui->widget_7, "styleSheet");
+    propertyAnimation->setDuration(1500);
+
+    QFile styleLoader(STYLESHEETSPATH+themes[startType]);
+    styleLoader.open(QFile::ReadOnly);
+    targetStyleSheet = tr(styleLoader.readAll());
+    styleLoader.close();
+    propertyAnimation->setStartValue(getStyleSheet());
+
+    QFile styleLoader2(STYLESHEETSPATH+themes[endType]);
+    styleLoader2.open(QFile::ReadOnly);
+    targetStyleSheet = tr(styleLoader2.readAll());
+    styleLoader2.close();
+    propertyAnimation->setEndValue(getStyleSheet());
+
+    propertyAnimation->setEasingCurve(QEasingCurve::OutCubic);
+    propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
 }
 
 void mainwindow::on_pushBtn_work_clicked(bool checked)
@@ -417,22 +440,30 @@ void mainwindow::on_pushButton_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton->setChecked(true);
+    /*
     QFile styleLoader(STYLESHEETSPATH+"theme1.qss");
     styleLoader.open(QFile::ReadOnly);
     QString theme1 = tr(styleLoader.readAll());
     styleLoader.close();
     ui->widget_7->setStyleSheet(theme1);
+    */
+    themeSetNStartAnimation(currentThemeType, THEME_TYPE::THEME1);
+    currentThemeType = THEME_TYPE::THEME1;
 }
 
 void mainwindow::on_pushButton_3_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_3->setChecked(true);
+    /*
     QFile styleLoader(STYLESHEETSPATH+"theme3.qss");
     styleLoader.open(QFile::ReadOnly);
     QString theme3 = tr(styleLoader.readAll());
     styleLoader.close();
     ui->widget_7->setStyleSheet(theme3);
+    */
+    themeSetNStartAnimation(currentThemeType, THEME_TYPE::THEME3);
+    currentThemeType = THEME_TYPE::THEME3;
 }
 
 void mainwindow::on_pushButton_4_clicked(bool checked)
@@ -499,4 +530,14 @@ void mainwindow::on_pushButton_8_clicked(bool checked)
     QString theme8 = tr(styleLoader.readAll());
     styleLoader.close();
     ui->widget_7->setStyleSheet(theme8);
+}
+
+QString mainwindow::getStyleSheet()
+{
+    return targetStyleSheet;
+}
+
+void mainwindow::setStyleSheet(QString styleSheet)
+{
+    ui->widget_7->setStyleSheet(styleSheet);
 }
