@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>widget_3</class>
- <widget class="QWidget" name="widget_3">
+ <class>widget7</class>
+ <widget class="QWidget" name="widget7">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>958</width>
-    <height>587</height>
+    <width>901</width>
+    <height>41</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(255, 255, 255);</string>
+   <string notr="true">background-color: rgb(255, 165, 0);</string>
   </property>
  </widget>
  <resources/>

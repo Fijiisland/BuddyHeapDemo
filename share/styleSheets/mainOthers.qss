@@ -1,0 +1,9 @@
+QPushButton{
+    border-image: url(:/images/share/images/others1.png);
+}
+QPushButton:hover{
+    border-image: url(:/images/share/images/others.png);
+}
+QPushButton:checked{
+    border-image: url(:/images/share/images/others-1.png);
+}

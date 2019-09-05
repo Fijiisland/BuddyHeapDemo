@@ -4,43 +4,20 @@
 mainwindow::mainwindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::mainwindow),
-    STYLESHEETSPATH(":/styleSheets/share/styleSheets/"),
-    FONTSPATH(":/fonts/share/fonts/"),
-    IMAGESPATH(":/images/share/images/"),
-    themes{"theme1.qss","theme2.qss","theme3.qss","theme4.qss","theme5.qss","theme6.qss","theme7.qss","theme8.qss",},
-    currentThemeType(THEME_TYPE::THEME1)
+    currentThemeColorType(COLOR_TYPE::COLOR1)
 {
     ui->setupUi(this);
-    setModulesStyle();
-    setAnimation();
-    hide_modules();
+    styleSheetLoader = new QFile;
+    setModulesStyleNFunctions();
+    setStartUpAnimation();
+    hideModules();
 }
 
 mainwindow::~mainwindow()
 {
     delete ui;
 }
-/*
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-**
-*/
+
 void mainwindow::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton){
@@ -65,18 +42,16 @@ void mainwindow::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void mainwindow::start_fade_animation()
+void mainwindow::startFadeAnimation()
 {
     launcher_timer->stop();
-    propertyAnimation->setStartValue(1);
-    propertyAnimation->setEndValue(0);
-    propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
+    setFadeInOrOutAnimation(ui->widget_2, this, 250, FADE_TYPE::OUT);
     show_timer = new QTimer;
     show_timer->start(1000);
-    connect(show_timer, SIGNAL(timeout()), this, SLOT(show_modules()));
+    connect(show_timer, SIGNAL(timeout()), this, SLOT(showModules()));
 }
 
-void mainwindow::show_modules()
+void mainwindow::showModules()
 {
     loading_mov->stop();
     ui->widget_2->hide();
@@ -102,7 +77,7 @@ void mainwindow::on_pushBtn_close_clicked()
     this->close();
 }
 
-void mainwindow::hide_modules()
+void mainwindow::hideModules()
 {
     ui->frame_3->hide();
     ui->widget_3->hide();
@@ -130,10 +105,20 @@ void mainwindow::setAllVisiualizeBtnsUnchecked()
     ui->pushButton_8->setChecked(false);
 }
 
-void mainwindow::setModulesStyle()
+void mainwindow::setModulesStyleNFunctions()
 {
-    ui->frame->setStyleSheet("#frame{border:1.4px solid #BEBEBE}#background-color:#FFFFFF");
+    // Functions
     this->setWindowFlags(Qt::FramelessWindowHint);
+    ui->pushBtn_visualize->setEnabled(false);
+    ui->pushBtn_others->setEnabled(false);
+    ui->pushButton->setChecked(true);
+    QFrame *parent_frame = ui->frame_3;
+    ui->widget_3->setParent(parent_frame);
+    ui->widget_4->setParent(parent_frame);
+    ui->widget_5->setParent(parent_frame);
+    ui->pushBtn_zoom->setEnabled(false);
+    // Styles
+    ui->frame->setStyleSheet("#frame{border:1.4px solid #BEBEBE}#background-color:#FFFFFF");
     int fontID1 = QFontDatabase::addApplicationFont(FONTSPATH+"SF-Pro-Display-Ultralight.otf");
     int fontID2 = QFontDatabase::addApplicationFont(FONTSPATH+"SF-Pro-Display-Regular.otf");
     QString SP_Ultralight = QFontDatabase::applicationFontFamilies(fontID1).at(0);
@@ -141,28 +126,22 @@ void mainwindow::setModulesStyle()
     ui->label_launcher->setFont(QFont(SP_Ultralight, 22));
     ui->label_headline->setFont(QFont("Segoe UI", 9));
     ui->label_headline->setStyleSheet("color:#FFFFFF;");
-    ui->pushBtn_setmem->setStyleSheet("QPushButton{border-image: url("+IMAGESPATH+"setmem_regular.png);}"
-                                      "QPushButton:hover{border-image: url("+IMAGESPATH+"setmem_hover.png);}"
-                                      "QPushButton:pressed{border-image: url("+IMAGESPATH+"setmem_press.png);}");
-    ui->pushBtn_addjob->setStyleSheet("QPushButton{border-image: url("+IMAGESPATH+"addjob_regular.png);}"
-                                      "QPushButton:hover{border-image: url("+IMAGESPATH+"addjob_hover.png);}"
-                                      "QPushButton:pressed{border-image: url("+IMAGESPATH+"addjob_press.png);}");
-    ui->pushBtn_zoom->setEnabled(false);
-    ui->pushBtn_close->setStyleSheet("QPushButton{border-image: url("+IMAGESPATH+"close1.png);}"
-                                     "QPushButton:hover{border-image: url("+IMAGESPATH+"close.png);}"
-                                     "QPushButton:pressed{border-image: url("+IMAGESPATH+"close-1.png);}");
-    ui->pushBtn_mini->setStyleSheet("QPushButton{border-image: url("+IMAGESPATH+"mini1.png);}"
-                                    "QPushButton:hover{border-image: url("+IMAGESPATH+"mini.png);}"
-                                    "QPushButton:pressed{border-image: url("+IMAGESPATH+"mini-1.png);}");
-    ui->pushBtn_work->setStyleSheet("QPushButton{border-image: url("+IMAGESPATH+"work1.png);}"
-                                     "QPushButton:hover{border-image: url("+IMAGESPATH+"work.png);}"
-                                     "QPushButton:checked{border-image: url("+IMAGESPATH+"work-1.png);}");
-    ui->pushBtn_visualize->setStyleSheet("QPushButton{border-image: url("+IMAGESPATH+"visualize1.png);}"
-                                         "QPushButton:hover{border-image: url("+IMAGESPATH+"visualize.png);}"
-                                         "QPushButton:checked{border-image: url("+IMAGESPATH+"visualize-1.png);}");
-    ui->pushBtn_others->setStyleSheet("QPushButton{border-image: url("+IMAGESPATH+"others1.png);}"
-                                      "QPushButton:hover{border-image: url("+IMAGESPATH+"others.png);}"
-                                      "QPushButton:checked{border-image: url("+IMAGESPATH+"others-1.png);}");
+
+    setMyStyleSheet("mainSetmem.qss");
+    ui->pushBtn_setmem->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("mainAddJob.qss");
+    ui->pushBtn_addjob->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("mainClose.qss");
+    ui->pushBtn_close->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("mainMini.qss");
+    ui->pushBtn_mini->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("mainWork.qss");
+    ui->pushBtn_work->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("mainVisualize.qss");
+    ui->pushBtn_visualize->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("mainOthers.qss");
+    ui->pushBtn_others->setStyleSheet(myStyleSheet);
+
     ui->label_welcome->setFont(QFont("微软雅黑 Light", 30));
     ui->label_welcome->setStyleSheet("Color:#708090;");
     ui->label_12->setFont(QFont("微软雅黑 Light", 30));
@@ -191,212 +170,101 @@ void mainwindow::setModulesStyle()
     ui->label_23->setStyleSheet("Color:#708090;");
     ui->label_7->setFont(QFont("微软雅黑", 10));
     ui->label_7->setStyleSheet("Color:#708090;");
+    ui->label_memCapacity->setFont(QFont("微软雅黑", 9));
+    ui->label_memCapacity->setStyleSheet("Color:#708090;");
     ui->label_3->setFont(QFont("微软雅黑 Light", 30));
     ui->label_3->setStyleSheet("Color:#708090;");
     ui->label_4->setFont(QFont("微软雅黑", 9));
     ui->label_4->setStyleSheet("Color:#708090;");
     ui->label_hint->setFont(QFont("微软雅黑", 10));
     ui->label_hint->setStyleSheet("Color:#708090;");
-    ui->pushBtn_visualize->setEnabled(false);
-    ui->pushBtn_others->setEnabled(false);
-    ui->pushButton->setChecked(true);
-    ui->pushButton->setStyleSheet(
-                "QPushButton{"
-                "background-color:rgb(255,165,0);"
-                "border-radius:9px;"
-                "}"
-                "QPushButton:checked{"
-                "background-color:rgb(255,165,0);"
-                "border-style:outset;"
-                "border-width:3px;"
-                "border-color:rgb(30,144,255);"
-                "border-radius:9px;"
-                "}");
-    ui->pushButton_2->setStyleSheet(
-                "QPushButton{"
-                "background-color:rgb(30,144,255);"
-                "border-radius:9px;"
-                "}"
-                "QPushButton:checked{"
-                "background-color:rgb(30,144,255);"
-                "border-style:outset;"
-                "border-width:3px;"
-                "border-color:rgb(30,144,255);"
-                "border-radius:9px;"
-                "}");
-    ui->pushButton_3->setStyleSheet(
-                "QPushButton{"
-                "background-color:rgb(0,205,0);"
-                "border-radius:9px;"
-                "}"
-                "QPushButton:checked{"
-                "background-color:rgb(0,205,0);"
-                "border-style:outset;"
-                "border-width:3px;"
-                "border-color:rgb(30,144,255);"
-                "border-radius:9px;"
-                "}");
-    ui->pushButton_4->setStyleSheet(
-                "QPushButton{"
-                "background-color:rgb(130,130,130);"
-                "border-radius:9px;"
-                "}"
-                "QPushButton:checked{"
-                "background-color:rgb(130,130,130);"
-                "border-style:outset;"
-                "border-width:3px;"
-                "border-color:rgb(30,144,255);"
-                "border-radius:9px;"
-                "}");
-    ui->pushButton_5->setStyleSheet(
-                "QPushButton{"
-                "background-color:rgb(36,41,46);"
-                "border-radius:9px;"
-                "}"
-                "QPushButton:checked{"
-                "background-color:rgb(36,41,46);"
-                "border-style:outset;"
-                "border-width:3px;"
-                "border-color:rgb(30,144,255);"
-                "border-radius:9px;"
-                "}");
-    ui->pushButton_6->setStyleSheet(
-                "QPushButton{"
-                "background-color:rgb(255,62,150);"
-                "border-radius:9px;"
-                "}"
-                "QPushButton:checked{"
-                "background-color:rgb(255,62,150);"
-                "border-style:outset;"
-                "border-width:3px;"
-                "border-color:rgb(30,144,255);"
-                "border-radius:9px;"
-                "}");
-    ui->pushButton_7->setStyleSheet(
-                "QPushButton{"
-                "background-color:rgb(255,215,0);"
-                "border-radius:9px;"
-                "}"
-                "QPushButton:checked{"
-                "background-color:rgb(255,215,0);"
-                "border-style:outset;"
-                "border-width:3px;"
-                "border-color:rgb(30,144,255);"
-                "border-radius:9px;"
-                "}");
-    ui->pushButton_8->setStyleSheet(
-                "QPushButton{"
-                "background-color:rgb(148,0,211);"
-                "border-radius:9px;"
-                "}"
-                "QPushButton:checked{"
-                "background-color:rgb(148,0,211);"
-                "border-style:outset;"
-                "border-width:3px;"
-                "border-color:rgb(30,144,255);"
-                "border-radius:9px;"
-                "}");
 
-    ui->pushBtn_start->setStyleSheet(
-                "QPushButton{"
-                "background-color:rgba(255,255,255,100);"
-                "border-style:inset;"
-                "border-width:1px;"
-                "border-color:rgb(36,41,46);"
-                "border-radius:10px;"
-                "}"
-                "QPushButton:hover{"
-                "background-color:rgba(36,41,46,100);"
-                "border-style:inset;"
-                "border-width:1px;"
-                "border-color:rgb(36,41,46);"
-                "border-radius:10px;"
-                "}"
-                "QPushButton:pressed{"
-                "background-color:rgba(5, 5, 5);"
-                "border-style:inset;"
-                "border-width:1px;"
-                "border-color:rgb(36,41,46);"
-                "border-radius:10px;"
-                "}");
+//  Work page ruler's serial number
+    ui->label_5->setFont(QFont("Courier Prime", 10));
+    ui->label_5->setStyleSheet("Color:#708090;");
+    ui->label_6->setFont(QFont("Courier Prime", 10));
+    ui->label_6->setStyleSheet("Color:#708090;");
+    ui->label_8->setFont(QFont("Courier Prime", 10));
+    ui->label_8->setStyleSheet("Color:#708090;");
+    ui->label_24->setFont(QFont("Courier Prime", 10));
+    ui->label_24->setStyleSheet("Color:#708090;");
+    ui->label_25->setFont(QFont("Courier Prime", 10));
+    ui->label_25->setStyleSheet("Color:#708090;");
+    ui->label_26->setFont(QFont("Courier Prime", 10));
+    ui->label_26->setStyleSheet("Color:#708090;");
+    ui->label_27->setFont(QFont("Courier Prime", 10));
+    ui->label_27->setStyleSheet("Color:#708090;");
+    ui->label_28->setFont(QFont("Courier Prime", 10));
+    ui->label_28->setStyleSheet("Color:#708090;");
+    ui->label_29->setFont(QFont("Courier Prime", 10));
+    ui->label_29->setStyleSheet("Color:#708090;");
+    ui->label_30->setFont(QFont("Courier Prime", 10));
+    ui->label_30->setStyleSheet("Color:#708090;");
+    ui->label_31->setFont(QFont("Courier Prime", 10));
+    ui->label_31->setStyleSheet("Color:#708090;");
+    ui->label_32->setFont(QFont("Courier Prime", 10));
+    ui->label_32->setStyleSheet("Color:#708090;");
+//  Work page ruler's serial number
+
+    setMyStyleSheet("VisualBtn1.qss");
+    ui->pushButton->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("VisualBtn2.qss");
+    ui->pushButton_2->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("VisualBtn3.qss");
+    ui->pushButton_3->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("VisualBtn4.qss");
+    ui->pushButton_4->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("VisualBtn5.qss");
+    ui->pushButton_5->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("VisualBtn6.qss");
+    ui->pushButton_6->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("VisualBtn7.qss");
+    ui->pushButton_7->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("VisualBtn8.qss");
+    ui->pushButton_8->setStyleSheet(myStyleSheet);
+    setMyStyleSheet("WelcomeBtnStart.qss");
+    ui->pushBtn_start->setStyleSheet(myStyleSheet);
     ui->pushBtn_start->setFont(QFont("微软雅黑", 10));
-    QFrame *parent_frame = ui->frame_3;
-    ui->widget_3->setParent(parent_frame);
-    ui->widget_4->setParent(parent_frame);
-    ui->widget_5->setParent(parent_frame);
-    QFile styleLoader(STYLESHEETSPATH+"theme1.qss");
-    styleLoader.open(QFile::ReadOnly);
-    QString theme1 = tr(styleLoader.readAll());
-    styleLoader.close();
-    ui->widget_7->setStyleSheet(theme1);
+    setMyStyleSheet("theme1.qss");
+    ui->widget_7->setStyleSheet(myStyleSheet);
 }
 
-void mainwindow::setAnimation()
+void mainwindow::setStartUpAnimation()
 {
     loading_mov = new QMovie(IMAGESPATH+"loading.gif");
     loading_mov->setSpeed(150);
     ui->label_loading->setMovie(loading_mov);
     loading_mov->start();
 
-    opacityEffect = new QGraphicsOpacityEffect(ui->widget_2);
-    opacityEffect->setOpacity(1);
-    ui->widget_2->setGraphicsEffect(opacityEffect);
-    propertyAnimation = new QPropertyAnimation(opacityEffect, "opacity", this);
-    propertyAnimation->setEasingCurve(QEasingCurve::Linear);
-    propertyAnimation->setDuration(250);
     launcher_timer = new QTimer;
     launcher_timer->start(4000);
-    connect(launcher_timer, SIGNAL(timeout()), this, SLOT(start_fade_animation()));
+    connect(launcher_timer, SIGNAL(timeout()), this, SLOT(startFadeAnimation()));
 }
 
 void mainwindow::startWorkPageAnimation()
 {
-    opacityEffect = new QGraphicsOpacityEffect(ui->label_7);
-    opacityEffect->setOpacity(0);
-    ui->label_7->setGraphicsEffect(opacityEffect);
-    propertyAnimation = new QPropertyAnimation(opacityEffect, "opacity",ui->widget_3);
-    propertyAnimation->setEasingCurve(QEasingCurve::Linear);
-    propertyAnimation->setDuration(500);
-    propertyAnimation->setStartValue(0);
-    propertyAnimation->setEndValue(1);
-    propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
+    setFadeInOrOutAnimation(ui->label_7, ui->widget_3, 500, FADE_TYPE::IN);
+    setFadeInOrOutAnimation(ui->label_memCapacity, ui->widget_3, 500, FADE_TYPE::IN);
+    setPropertyAnimation("size", ui->widget_8->size(),
+                         QSize(900, ui->widget_8->size().height()), 1000,
+                         QEasingCurve::InOutCirc, ui->widget_8, nullptr, nullptr);
 }
-static bool othersPageAnimationShowed = false;
+
+static
+bool othersPageAnimationShowed = false;
 void mainwindow::startOthersPageAnimation()
 {
     if(!othersPageAnimationShowed){
         othersPageAnimationShowed = true;
-        opacityEffect = new QGraphicsOpacityEffect;
-        opacityEffect->setOpacity(0);
-        ui->label_22->setGraphicsEffect(opacityEffect);
-        propertyAnimation = new QPropertyAnimation(opacityEffect, "opacity",ui->widget_5);
-        propertyAnimation->setEasingCurve(QEasingCurve::Linear);
-        propertyAnimation->setDuration(2000);
-        propertyAnimation->setStartValue(0);
-        propertyAnimation->setEndValue(1);
-        propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
+        setFadeInOrOutAnimation(ui->label_22, ui->widget_5, 2000, FADE_TYPE::IN);
     }
 }
 /*
-void mainwindow::themeSetNStartAnimation(THEME_TYPE startType, THEME_TYPE endType)
+void mainwindow::themeSetNStartAnimation(COLOR_TYPE startColor, COLOR_TYPE endColor)
 {
-    propertyAnimation = new QPropertyAnimation(ui->widget_7, "styleSheet");
-    propertyAnimation->setDuration(1500);
-
-    QFile styleLoader(STYLESHEETSPATH+themes[startType]);
-    styleLoader.open(QFile::ReadOnly);
-    targetStyleSheet = tr(styleLoader.readAll());
-    styleLoader.close();
-    propertyAnimation->setStartValue(getStyleSheet());
-
-    QFile styleLoader2(STYLESHEETSPATH+themes[endType]);
-    styleLoader2.open(QFile::ReadOnly);
-    targetStyleSheet = tr(styleLoader2.readAll());
-    styleLoader2.close();
-    propertyAnimation->setEndValue(getStyleSheet());
-
-    propertyAnimation->setEasingCurve(QEasingCurve::OutCubic);
-    propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
+    setPropertyAnimation("color", COLORS[startColor],COLORS[endColor],
+                         1500, QEasingCurve::OutCubic, ui->widget_7,
+                         nullptr, nullptr);
 }
 */
 void mainwindow::on_pushBtn_work_clicked(bool checked)
@@ -440,99 +308,109 @@ void mainwindow::on_pushButton_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton->setChecked(true);
-    QFile styleLoader(STYLESHEETSPATH+"theme1.qss");
-    styleLoader.open(QFile::ReadOnly);
-    QString theme1 = tr(styleLoader.readAll());
-    styleLoader.close();
-    ui->widget_7->setStyleSheet(theme1);
-    currentThemeType = THEME_TYPE::THEME1;
+    setWidget7StyleSheet("theme1.qss");
+    //themeSetNStartAnimation(currentThemeColorType, COLOR_TYPE::COLOR1);
+    currentThemeColorType = COLOR_TYPE::COLOR1;
 }
 
 void mainwindow::on_pushButton_3_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_3->setChecked(true);
-    QFile styleLoader(STYLESHEETSPATH+"theme3.qss");
-    styleLoader.open(QFile::ReadOnly);
-    QString theme3 = tr(styleLoader.readAll());
-    styleLoader.close();
-    ui->widget_7->setStyleSheet(theme3);
-    currentThemeType = THEME_TYPE::THEME3;
+    setWidget7StyleSheet("theme3.qss");
+    //themeSetNStartAnimation(currentThemeColorType, COLOR_TYPE::COLOR3);
+    currentThemeColorType = COLOR_TYPE::COLOR3;
 }
 
 void mainwindow::on_pushButton_4_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_4->setChecked(true);
-    QFile styleLoader(STYLESHEETSPATH+"theme4.qss");
-    styleLoader.open(QFile::ReadOnly);
-    QString theme4 = tr(styleLoader.readAll());
-    styleLoader.close();
-    ui->widget_7->setStyleSheet(theme4);
+    setWidget7StyleSheet("theme4.qss");
+    //themeSetNStartAnimation(currentThemeColorType, COLOR_TYPE::COLOR4);
+    currentThemeColorType = COLOR_TYPE::COLOR4;
 }
 
 void mainwindow::on_pushButton_5_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_5->setChecked(true);
-    QFile styleLoader(STYLESHEETSPATH+"theme5.qss");
-    styleLoader.open(QFile::ReadOnly);
-    QString theme5 = tr(styleLoader.readAll());
-    styleLoader.close();
-    ui->widget_7->setStyleSheet(theme5);
+    setWidget7StyleSheet("theme5.qss");
+    //themeSetNStartAnimation(currentThemeColorType, COLOR_TYPE::COLOR5);
+    currentThemeColorType = COLOR_TYPE::COLOR5;
 }
 
 void mainwindow::on_pushButton_2_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_2->setChecked(true);
-    QFile styleLoader(STYLESHEETSPATH+"theme2.qss");
-    styleLoader.open(QFile::ReadOnly);
-    QString theme2 = tr(styleLoader.readAll());
-    styleLoader.close();
-    ui->widget_7->setStyleSheet(theme2);
+    setWidget7StyleSheet("theme2.qss");
+    //themeSetNStartAnimation(currentThemeColorType, COLOR_TYPE::COLOR2);
+    currentThemeColorType = COLOR_TYPE::COLOR2;
 }
 
 void mainwindow::on_pushButton_6_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_6->setChecked(true);
-    QFile styleLoader(STYLESHEETSPATH+"theme6.qss");
-    styleLoader.open(QFile::ReadOnly);
-    QString theme6 = tr(styleLoader.readAll());
-    styleLoader.close();
-    ui->widget_7->setStyleSheet(theme6);
+    setWidget7StyleSheet("theme6.qss");
+    //themeSetNStartAnimation(currentThemeColorType, COLOR_TYPE::COLOR6);
+    currentThemeColorType = COLOR_TYPE::COLOR6;
 }
 
 void mainwindow::on_pushButton_7_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_7->setChecked(true);
-    QFile styleLoader(STYLESHEETSPATH+"theme7.qss");
-    styleLoader.open(QFile::ReadOnly);
-    QString theme7 = tr(styleLoader.readAll());
-    styleLoader.close();
-    ui->widget_7->setStyleSheet(theme7);
+    setWidget7StyleSheet("theme7.qss");
+    //themeSetNStartAnimation(currentThemeColorType, COLOR_TYPE::COLOR7);
+    currentThemeColorType = COLOR_TYPE::COLOR7;
 }
 
 void mainwindow::on_pushButton_8_clicked(bool checked)
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_8->setChecked(true);
-    QFile styleLoader(STYLESHEETSPATH+"theme8.qss");
-    styleLoader.open(QFile::ReadOnly);
-    QString theme8 = tr(styleLoader.readAll());
-    styleLoader.close();
-    ui->widget_7->setStyleSheet(theme8);
-}
-/*
-QString mainwindow::getStyleSheet()
-{
-    return targetStyleSheet;
+    setWidget7StyleSheet("theme8.qss");
+    //themeSetNStartAnimation(currentThemeColorType, COLOR_TYPE::COLOR8);
+    currentThemeColorType = COLOR_TYPE::COLOR8;
 }
 
-void mainwindow::setStyleSheet(QString styleSheet)
+void mainwindow::setPropertyAnimation(QByteArray _property, QVariant startValue, QVariant endValue, int duration,
+                                      QEasingCurve curve, QWidget *target = nullptr, QGraphicsEffect* effect = nullptr, QWidget* _parent = nullptr)
 {
-    ui->widget_7->setStyleSheet(styleSheet);
+    if(!effect)
+        propertyAnimation = new QPropertyAnimation(target, _property);
+    else
+        propertyAnimation = new QPropertyAnimation(effect, _property, _parent);
+    propertyAnimation->setDuration(duration);
+    propertyAnimation->setEasingCurve(curve);
+    propertyAnimation->setStartValue(startValue);
+    propertyAnimation->setEndValue(endValue);
+    propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
 }
-*/
+
+void mainwindow::setFadeInOrOutAnimation(QWidget *target, QWidget *parent, int duration, FADE_TYPE type)
+{
+    int startValue = 0, endValue = 1;
+    if(type == FADE_TYPE::OUT)
+        qSwap(startValue, endValue);
+    opacityEffect = new QGraphicsOpacityEffect(target);
+    opacityEffect->setOpacity(startValue);
+    target->setGraphicsEffect(opacityEffect);
+    setPropertyAnimation("opacity", startValue, endValue, duration, QEasingCurve::Linear, nullptr, opacityEffect, parent);
+}
+
+void mainwindow::setWidget7StyleSheet(QString name)
+{
+    setMyStyleSheet(name);
+    ui->widget_7->setStyleSheet(myStyleSheet);
+}
+
+void mainwindow::setMyStyleSheet(QString name)
+{
+    styleSheetLoader->setFileName(STYLESHEETSPATH+name);
+    styleSheetLoader->open(QFile::ReadOnly);
+    myStyleSheet = tr(styleSheetLoader->readAll());
+    styleSheetLoader->close();
+}

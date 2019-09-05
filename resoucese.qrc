@@ -4,7 +4,6 @@
         <file>share/images/loading.gif</file>
         <file>share/images/mini.png</file>
         <file>share/images/zoom.png</file>
-        <file>share/images/left_up.ico</file>
         <file>share/images/icon.png</file>
         <file>share/images/setmem_hover.png</file>
         <file>share/images/setmem_press.png</file>
@@ -44,5 +43,21 @@
         <file>share/styleSheets/theme6.qss</file>
         <file>share/styleSheets/theme7.qss</file>
         <file>share/styleSheets/theme8.qss</file>
+        <file>share/styleSheets/VisualBtn1.qss</file>
+        <file>share/styleSheets/VisualBtn2.qss</file>
+        <file>share/styleSheets/VisualBtn3.qss</file>
+        <file>share/styleSheets/VisualBtn4.qss</file>
+        <file>share/styleSheets/VisualBtn5.qss</file>
+        <file>share/styleSheets/VisualBtn6.qss</file>
+        <file>share/styleSheets/VisualBtn7.qss</file>
+        <file>share/styleSheets/VisualBtn8.qss</file>
+        <file>share/styleSheets/mainAddJob.qss</file>
+        <file>share/styleSheets/mainClose.qss</file>
+        <file>share/styleSheets/mainMini.qss</file>
+        <file>share/styleSheets/mainOthers.qss</file>
+        <file>share/styleSheets/mainSetmem.qss</file>
+        <file>share/styleSheets/mainVisualize.qss</file>
+        <file>share/styleSheets/mainWork.qss</file>
+        <file>share/styleSheets/WelcomeBtnStart.qss</file>
     </qresource>
 </RCC>

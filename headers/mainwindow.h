@@ -4,9 +4,6 @@
 #include <QWidget>
 #include "_utility.h"
 
-enum THEME_TYPE{THEME1, THEME2, THEME3, THEME4,
-                 THEME5, THEME6, THEME7, THEME8};
-
 namespace Ui {
 class mainwindow;
 }
@@ -14,7 +11,6 @@ class mainwindow;
 class mainwindow : public QWidget
 {
     Q_OBJECT
-    Q_PROPERTY(QString myStyleSheet WRITE setMyStyleSheet)
 
 public:
     explicit mainwindow(QWidget *parent = nullptr);
@@ -26,9 +22,9 @@ protected:
 
       virtual void mouseReleaseEvent(QMouseEvent *event);
 private slots:
-    void start_fade_animation();
+    void startFadeAnimation();
 
-    void show_modules();
+    void showModules();
 
     void on_pushBtn_mini_clicked();
 
@@ -59,30 +55,32 @@ private slots:
     void on_pushButton_8_clicked(bool checked);
 
 private:
-    Ui::mainwindow         *ui;
-    QMovie                 *loading_mov;
-    QTimer                 *launcher_timer;
-    QTimer                 *show_timer;
-    QGraphicsOpacityEffect *opacityEffect;
-    QPropertyAnimation     *propertyAnimation;
+    Ui::mainwindow        *ui;
+    QMovie                *loading_mov;
+    QTimer                *launcher_timer;
+    QTimer                *show_timer;
+    QGraphicsOpacityEffect*opacityEffect;
+    QPropertyAnimation    *propertyAnimation;
     QPoint                 m_startPoint;
     QPoint                 m_windowPoint;
     bool                   m_move;
-    QPainter               *painter;
-    const QString          STYLESHEETSPATH;
-    const QString          FONTSPATH;
-    const QString          IMAGESPATH;
-    const QString          themes[8];
-    THEME_TYPE             currentThemeType;
-    QString                targetStyleSheet;
+    QPainter              *painter;
+    COLOR_TYPE             currentThemeColorType;
+    QFile                 *styleSheetLoader;
+    QString                myStyleSheet;
 private:
-    void          hide_modules();
-    void          setAllVisiualizeBtnsUnchecked();
-    void          setModulesStyle();
-    void          setAnimation();
-    void          startWorkPageAnimation();
-    void          startOthersPageAnimation();
-    //void          themeSetNStartAnimation(THEME_TYPE startType, THEME_TYPE endType);
+    void                   setPropertyAnimation(QByteArray, QVariant, QVariant, int,
+                                                  QEasingCurve, QWidget*, QGraphicsEffect*, QWidget*);
+    void                   setFadeInOrOutAnimation(QWidget*, QWidget*, int, FADE_TYPE);
+    void                   setWidget7StyleSheet(QString name);
+    void                   setMyStyleSheet(QString name);
+    void                   hideModules();
+    void                   setAllVisiualizeBtnsUnchecked();
+    void                   setModulesStyleNFunctions();
+    void                   setStartUpAnimation();
+    void                   startWorkPageAnimation();
+    void                   startOthersPageAnimation();
+  //void                   themeSetNStartAnimation(COLOR_TYPE startColor, COLOR_TYPE endColor);
 };
 
 #endif // MAINWINDOW_H
