@@ -1,0 +1,6 @@
+QWidget{
+	background-color:rgb(%1,%2,%3);
+	border-style:inset;
+	border-width:1px;
+	border-color:rgb(%4,%5,%6);
+}

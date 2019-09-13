@@ -5,7 +5,7 @@ QPushButton{
 QPushButton:checked{
         background-color:rgb(255,62,150);
         border-style:outset;
-        border-width:3px;
-        border-color:rgb(30,144,255);
+        border-width:1px;
+        border-color:rgb(36,41,46);
         border-radius:9px;
 }

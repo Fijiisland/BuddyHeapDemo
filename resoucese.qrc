@@ -28,6 +28,10 @@
         <file>share/images/affinity-designe.png</file>
         <file>share/images/Motion.png</file>
         <file>share/images/ps.png</file>
+        <file>share/images/reset_hover.png</file>
+        <file>share/images/reset_press.png</file>
+        <file>share/images/reset_regular.png</file>
+        <file>share/images/hideBtn.png</file>
     </qresource>
     <qresource prefix="/fonts">
         <file>share/fonts/SF-Pro-Display-Regular.otf</file>
@@ -59,5 +63,6 @@
         <file>share/styleSheets/mainVisualize.qss</file>
         <file>share/styleSheets/mainWork.qss</file>
         <file>share/styleSheets/WelcomeBtnStart.qss</file>
+        <file>share/styleSheets/mainReset.qss</file>
     </qresource>
 </RCC>

@@ -22,6 +22,8 @@ protected:
 
       virtual void mouseReleaseEvent(QMouseEvent *event);
 private slots:
+    void setMainMemoryCapacity(int v);
+
     void startFadeAnimation();
 
     void showModules();
@@ -54,6 +56,14 @@ private slots:
 
     void on_pushButton_8_clicked(bool checked);
 
+    void on_pushButton_9_clicked();
+
+    void on_pushBtn_setmem_clicked();
+
+    void on_pushBtn_addjob_clicked();
+
+    void on_pushBtn_reset_clicked();
+
 private:
     Ui::mainwindow        *ui;
     QMovie                *loading_mov;
@@ -64,11 +74,16 @@ private:
     QPoint                 m_startPoint;
     QPoint                 m_windowPoint;
     bool                   m_move;
+    bool                   popUpMenuIsAvaliable;
     QPainter              *painter;
-    COLOR_TYPE             currentThemeColorType;
+    THEME_COLOR_TYPE      currentThemeColorType;
     QFile                 *styleSheetLoader;
     QString                myStyleSheet;
+    BuddyHeap             *bHeap;
 private:
+    void                   setTheme(QString target);
+    void                   setWorkPageBtnAbledOrNot(bool e);
+    void                   popUpMenu();
     void                   setPropertyAnimation(QByteArray, QVariant, QVariant, int,
                                                   QEasingCurve, QWidget*, QGraphicsEffect*, QWidget*);
     void                   setFadeInOrOutAnimation(QWidget*, QWidget*, int, FADE_TYPE);

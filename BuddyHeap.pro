@@ -28,11 +28,13 @@ SOURCES += \
         sources/main.cpp \
         sources/mainwindow.cpp \
        #sources/widget7.cpp
+        sources/buddyheap.cpp
 
 HEADERS += \
         headers/mainwindow.h \
         headers/_utility.h \
        #headers/widget7.h
+        headers/buddyheap.h
 
 FORMS += \
         UIs/mainwindow.ui \
