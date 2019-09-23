@@ -34,7 +34,7 @@
 
 #include <QPoint>
 
-#include "buddyheap.h"
+#include <ctime>
 
 static const QPoint menuStartPoint(1, 700);
 static const QPoint menuEndPoint(1, 111);

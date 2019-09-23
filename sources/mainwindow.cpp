@@ -1,5 +1,6 @@
 #include "headers/mainwindow.h"
 #include "ui_mainwindow.h"
+#define DEBUG
 
 mainwindow::mainwindow(QWidget *parent) :
     QWidget(parent),
@@ -12,6 +13,9 @@ mainwindow::mainwindow(QWidget *parent) :
     setModulesStyleNFunctions();
     setStartUpAnimation();
     hideModules();
+#ifdef DEBUG
+    qDebug() << "==========Debugging..===========" << "\n";
+#endif
 }
 
 mainwindow::~mainwindow()
@@ -43,9 +47,13 @@ void mainwindow::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void mainwindow::setMainMemoryCapacity(int v)
+void mainwindow::setMainMemoryCapacity(int value)
 {
     ui->label_memCapacity->setText(QString::number(ui->horizontalSlider->value()) + QStringLiteral("KB"));
+    bHeap->setCurrentMemoryCapacity(static_cast<unsigned>(ui->horizontalSlider->value()));
+#ifdef DEBUG
+    qDebug() << "System's current memory capacity : " << bHeap->currentMemCapacity();
+#endif
 }
 
 void mainwindow::startFadeAnimation()
@@ -111,13 +119,25 @@ void mainwindow::setAllVisiualizeBtnsUnchecked()
     ui->pushButton_8->setChecked(false);
 }
 
+void mainwindow::setAllAddjobBtnsUnchecked()
+{
+    ui->pushButton_11->setChecked(false);
+    ui->pushButton_12->setChecked(false);
+    ui->pushButton_13->setChecked(false);
+    ui->pushButton_14->setChecked(false);
+    ui->pushButton_15->setChecked(false);
+    ui->pushButton_16->setChecked(false);
+    ui->pushButton_17->setChecked(false);
+    ui->pushButton_18->setChecked(false);
+}
+
 void mainwindow::setModulesStyleNFunctions()
 {
     // Functions
     this->setWindowFlags(Qt::FramelessWindowHint);
     connect(ui->horizontalSlider, SIGNAL(valueChanged(int)), this, SLOT(setMainMemoryCapacity(int)));
 
-    ui->horizontalSlider->setValue(BuddyHeap::DEFAULT_MEMORY_CAPACITY);
+    ui->horizontalSlider->setValue(static_cast<int>(BuddyHeap::DEFAULT_MEMORY_CAPACITY));
     styleSheetLoader = new QFile;
     ui->pushBtn_visualize->setEnabled(false);
     ui->pushBtn_others->setEnabled(false);
@@ -126,10 +146,17 @@ void mainwindow::setModulesStyleNFunctions()
     ui->widget_3->setParent(parent_frame);
     ui->widget_4->setParent(parent_frame);
     ui->widget_5->setParent(parent_frame);
+    ui->widget_22->setParent(parent_frame);
     ui->pushBtn_zoom->setEnabled(false);
     ui->pushBtn_setmem->setEnabled(false);
     ui->pushBtn_addjob->setEnabled(false);
     ui->pushBtn_reset->setEnabled(false);
+    ui->label_37->setParent(ui->widget_22);
+    ui->pushButton_17->setParent(ui->widget_22);
+    ui->pushButton_18->setParent(ui->widget_22);
+    ui->pushButton_15->setParent(ui->widget_22);
+    ui->pushButton_16->setParent(ui->widget_22);
+
     // Styles
     ui->frame->setStyleSheet(QStringLiteral("#frame{border:1.4px solid #24292E}#background-color:#FFFFFF"));
     int fontID1 = QFontDatabase::addApplicationFont(FONTSPATH+QStringLiteral("SF-Pro-Display-Ultralight.otf"));
@@ -227,6 +254,12 @@ void mainwindow::setModulesStyleNFunctions()
     ui->label_34->setStyleSheet(QStringLiteral("Color:#708090;"));
     ui->label_35->setFont(QFont(QStringLiteral("Courier Prime"), 8));
     ui->label_35->setStyleSheet(QStringLiteral("Color:#708090;"));
+    ui->label_36->setFont(QFont(QStringLiteral("微软雅黑 Light"), 11));
+    ui->label_36->setStyleSheet(QStringLiteral("Color:#708090;"));
+    ui->label_37->setFont(QFont(QStringLiteral("微软雅黑 Light"), 20));
+    ui->label_37->setStyleSheet(QStringLiteral("Color:#708090;"));
+    ui->label_38->setFont(QFont(QStringLiteral("微软雅黑 Light"), 15));
+    ui->label_38->setStyleSheet(QStringLiteral("Color:#708090;"));
 
     setMyStyleSheet(QStringLiteral("VisualBtn1.qss"));
     ui->pushButton->setStyleSheet(myStyleSheet);
@@ -249,6 +282,26 @@ void mainwindow::setModulesStyleNFunctions()
     ui->pushBtn_start->setFont(QFont(QStringLiteral("微软雅黑"), 10));
     setMyStyleSheet(QStringLiteral("theme1.qss"));
     ui->widget_7->setStyleSheet(myStyleSheet);
+
+    setMyStyleSheet(QStringLiteral("addJobBtns.qss"));
+    ui->pushButton_11->setStyleSheet(myStyleSheet);
+    ui->pushButton_11->setFont(QFont(QStringLiteral("微软雅黑 Light"), 12));
+    ui->pushButton_12->setStyleSheet(myStyleSheet);
+    ui->pushButton_12->setFont(QFont(QStringLiteral("微软雅黑 Light"), 12));
+    ui->pushButton_13->setStyleSheet(myStyleSheet);
+    ui->pushButton_13->setFont(QFont(QStringLiteral("微软雅黑 Light"), 12));
+    ui->pushButton_14->setStyleSheet(myStyleSheet);
+    ui->pushButton_14->setFont(QFont(QStringLiteral("微软雅黑 Light"), 12));
+    ui->pushButton_15->setStyleSheet(myStyleSheet);
+    ui->pushButton_15->setFont(QFont(QStringLiteral("微软雅黑 Light"), 12));
+    ui->pushButton_16->setStyleSheet(myStyleSheet);
+    ui->pushButton_16->setFont(QFont(QStringLiteral("微软雅黑 Light"), 12));
+    ui->pushButton_17->setStyleSheet(myStyleSheet);
+    ui->pushButton_17->setFont(QFont(QStringLiteral("微软雅黑 Light"), 12));
+    ui->pushButton_18->setStyleSheet(myStyleSheet);
+    ui->pushButton_18->setFont(QFont(QStringLiteral("微软雅黑 Light"), 12));
+    ui->pushButton_19->setStyleSheet(myStyleSheet);
+    ui->pushButton_19->setFont(QFont(QStringLiteral("微软雅黑 Light"), 12));
 }
 
 void mainwindow::setStartUpAnimation()
@@ -258,8 +311,13 @@ void mainwindow::setStartUpAnimation()
     ui->label_loading->setMovie(loading_mov);
     loading_mov->start();
 
+    qsrand(static_cast<unsigned>(time(nullptr)));
+    int startUpTime = qrand() % 2500 + 1000;
     launcher_timer = new QTimer;
-    launcher_timer->start(3500);
+    launcher_timer->start(startUpTime);
+#ifdef DEBUG
+    qDebug() << QStringLiteral("Start_Up_Time: ") << startUpTime;
+#endif
     connect(launcher_timer, SIGNAL(timeout()), this, SLOT(startFadeAnimation()));
 }
 
@@ -289,7 +347,7 @@ void mainwindow::themeSetNStartAnimation(COLOR_TYPE startColor, COLOR_TYPE endCo
                          nullptr, nullptr);
 }
 */
-void mainwindow::on_pushBtn_work_clicked(bool checked)
+void mainwindow::on_pushBtn_work_clicked()
 {
     setWorkPageBtnAbledOrNot(true);
     ui->pushBtn_visualize->setChecked(false);
@@ -300,7 +358,7 @@ void mainwindow::on_pushBtn_work_clicked(bool checked)
 }
 
 
-void mainwindow::on_pushBtn_visualize_clicked(bool checked)
+void mainwindow::on_pushBtn_visualize_clicked()
 {
     setWorkPageBtnAbledOrNot(false);
     ui->pushBtn_work->setChecked(false);
@@ -310,7 +368,7 @@ void mainwindow::on_pushBtn_visualize_clicked(bool checked)
     ui->widget_4->show();
 }
 
-void mainwindow::on_pushBtn_others_clicked(bool checked)
+void mainwindow::on_pushBtn_others_clicked()
 {
     setWorkPageBtnAbledOrNot(false);
     ui->pushBtn_visualize->setChecked(false);
@@ -332,7 +390,7 @@ void mainwindow::on_pushBtn_start_clicked()
     startWorkPageAnimation();
 }
 
-void mainwindow::on_pushButton_clicked(bool checked)
+void mainwindow::on_pushButton_clicked()
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton->setChecked(true);
@@ -341,7 +399,7 @@ void mainwindow::on_pushButton_clicked(bool checked)
     currentThemeColorType = THEME_COLOR_TYPE::T_COLOR1;
 }
 
-void mainwindow::on_pushButton_3_clicked(bool checked)
+void mainwindow::on_pushButton_3_clicked()
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_3->setChecked(true);
@@ -350,7 +408,7 @@ void mainwindow::on_pushButton_3_clicked(bool checked)
     currentThemeColorType = THEME_COLOR_TYPE::T_COLOR3;
 }
 
-void mainwindow::on_pushButton_4_clicked(bool checked)
+void mainwindow::on_pushButton_4_clicked()
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_4->setChecked(true);
@@ -359,7 +417,7 @@ void mainwindow::on_pushButton_4_clicked(bool checked)
     currentThemeColorType = THEME_COLOR_TYPE::T_COLOR4;
 }
 
-void mainwindow::on_pushButton_5_clicked(bool checked)
+void mainwindow::on_pushButton_5_clicked()
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_5->setChecked(true);
@@ -368,7 +426,7 @@ void mainwindow::on_pushButton_5_clicked(bool checked)
     currentThemeColorType = THEME_COLOR_TYPE::T_COLOR5;
 }
 
-void mainwindow::on_pushButton_2_clicked(bool checked)
+void mainwindow::on_pushButton_2_clicked()
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_2->setChecked(true);
@@ -377,7 +435,7 @@ void mainwindow::on_pushButton_2_clicked(bool checked)
     currentThemeColorType = THEME_COLOR_TYPE::T_COLOR2;
 }
 
-void mainwindow::on_pushButton_6_clicked(bool checked)
+void mainwindow::on_pushButton_6_clicked()
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_6->setChecked(true);
@@ -386,7 +444,7 @@ void mainwindow::on_pushButton_6_clicked(bool checked)
     currentThemeColorType = THEME_COLOR_TYPE::T_COLOR6;
 }
 
-void mainwindow::on_pushButton_7_clicked(bool checked)
+void mainwindow::on_pushButton_7_clicked()
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_7->setChecked(true);
@@ -395,7 +453,7 @@ void mainwindow::on_pushButton_7_clicked(bool checked)
     currentThemeColorType = THEME_COLOR_TYPE::T_COLOR7;
 }
 
-void mainwindow::on_pushButton_8_clicked(bool checked)
+void mainwindow::on_pushButton_8_clicked()
 {
     setAllVisiualizeBtnsUnchecked();
     ui->pushButton_8->setChecked(true);
@@ -415,7 +473,7 @@ void mainwindow::setPropertyAnimation(QByteArray _property, QVariant startValue,
     propertyAnimation->setEasingCurve(curve);
     propertyAnimation->setStartValue(startValue);
     propertyAnimation->setEndValue(endValue);
-    propertyAnimation->start(QAbstractAnimation::KeepWhenStopped);
+    propertyAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void mainwindow::setFadeInOrOutAnimation(QWidget *target, QWidget *parent, int duration, FADE_TYPE type)
@@ -449,8 +507,13 @@ void mainwindow::on_pushBtn_setmem_clicked()
     ui->horizontalSlider->show();
     ui->label_34->show();
     ui->label_35->show();
+    ui->label_36->hide();
+    ui->pushButton_19->hide();
     if(!popUpMenuIsAvaliable)
         popUpMenu();
+    setPropertyAnimation("pos", ui->widget_22->pos(),
+                          QPoint(1200, 0), 700,
+                          QEasingCurve::InOutCubic, ui->widget_22, nullptr, nullptr);
 }
 
 void mainwindow::setWorkPageBtnAbledOrNot(bool e)
@@ -463,6 +526,9 @@ void mainwindow::setWorkPageBtnAbledOrNot(bool e)
 void mainwindow::on_pushButton_9_clicked()
 {
     popUpMenu();
+    setPropertyAnimation("pos", ui->widget_22->pos(),
+                          QPoint(1200, 0), 700,
+                          QEasingCurve::InOutCubic, ui->widget_22, nullptr, nullptr);
 }
 
 void mainwindow::popUpMenu()
@@ -486,12 +552,95 @@ void mainwindow::on_pushBtn_addjob_clicked()
     ui->horizontalSlider->hide();
     ui->label_34->hide();
     ui->label_35->hide();
+    ui->label_36->show();
+    ui->pushButton_19->show();
     if(!popUpMenuIsAvaliable)
         popUpMenu();
+    setPropertyAnimation("pos", ui->widget_22->pos(),
+                          QPoint(40, 0), 700,
+                          QEasingCurve::InOutCubic, ui->widget_22, nullptr, nullptr);
 }
 
 void mainwindow::on_pushBtn_reset_clicked()
 {
     ui->label_memCapacity->setText(QString::number(BuddyHeap::DEFAULT_MEMORY_CAPACITY));
-    ui->horizontalSlider->setValue(BuddyHeap::DEFAULT_MEMORY_CAPACITY);
+    ui->horizontalSlider->setValue(static_cast<int>(BuddyHeap::DEFAULT_MEMORY_CAPACITY));
+}
+
+void mainwindow::on_pushButton_10_clicked()
+{
+    setPropertyAnimation("pos", ui->widget_22->pos(),
+                          QPoint(1200, 0), 700,
+                          QEasingCurve::InOutCubic, ui->widget_22, nullptr, nullptr);
+}
+
+void mainwindow::on_pushButton_11_clicked()
+{
+    setAllAddjobBtnsUnchecked();
+    ui->pushButton_11->setChecked(true);
+    bHeap->appendProcess(Process(ui->lineEdit->text(), 1024));
+    ui->lineEdit->clear();
+}
+
+void mainwindow::on_pushButton_12_clicked()
+{
+    setAllAddjobBtnsUnchecked();
+    ui->pushButton_12->setChecked(true);
+    bHeap->appendProcess(Process(ui->lineEdit->text(), 512));
+    ui->lineEdit->clear();
+}
+
+void mainwindow::on_pushButton_13_clicked()
+{
+    setAllAddjobBtnsUnchecked();
+    ui->pushButton_13->setChecked(true);
+    bHeap->appendProcess(Process(ui->lineEdit->text(), 256));
+    ui->lineEdit->clear();
+}
+
+void mainwindow::on_pushButton_14_clicked()
+{
+    setAllAddjobBtnsUnchecked();
+    ui->pushButton_14->setChecked(true);
+    bHeap->appendProcess(Process(ui->lineEdit->text(), 128));
+    ui->lineEdit->clear();
+}
+
+void mainwindow::on_pushButton_15_clicked()
+{
+    setAllAddjobBtnsUnchecked();
+    ui->pushButton_15->setChecked(true);
+    bHeap->appendProcess(Process(ui->lineEdit->text(), 64));
+    ui->lineEdit->clear();
+}
+
+void mainwindow::on_pushButton_16_clicked()
+{
+    setAllAddjobBtnsUnchecked();
+    ui->pushButton_16->setChecked(true);
+    bHeap->appendProcess(Process(ui->lineEdit->text(), 32));
+    ui->lineEdit->clear();
+}
+
+void mainwindow::on_pushButton_17_clicked()
+{
+    setAllAddjobBtnsUnchecked();
+    ui->pushButton_17->setChecked(true);
+    bHeap->appendProcess(Process(ui->lineEdit->text(), 16));
+    ui->lineEdit->clear();
+}
+
+void mainwindow::on_pushButton_18_clicked()
+{
+    setAllAddjobBtnsUnchecked();
+    ui->pushButton_18->setChecked(true);
+    bHeap->appendProcess(Process(ui->lineEdit->text(), 8));
+    ui->lineEdit->clear();
+}
+
+void mainwindow::on_pushButton_19_clicked()
+{
+    setPropertyAnimation("pos", ui->widget_22->pos(),
+                          QPoint(40, 0), 700,
+                          QEasingCurve::InOutCubic, ui->widget_22, nullptr, nullptr);
 }

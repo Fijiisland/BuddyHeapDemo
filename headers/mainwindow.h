@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "_utility.h"
+#include "buddyheap.h"
 
 namespace Ui {
 class mainwindow;
@@ -15,6 +16,7 @@ class mainwindow : public QWidget
 public:
     explicit mainwindow(QWidget *parent = nullptr);
     ~mainwindow();
+    
 protected:
       virtual void mousePressEvent(QMouseEvent *event);
 
@@ -32,29 +34,29 @@ private slots:
 
     void on_pushBtn_close_clicked();
 
-    void on_pushBtn_work_clicked(bool checked);
+    void on_pushBtn_work_clicked();
 
-    void on_pushBtn_visualize_clicked(bool checked);
+    void on_pushBtn_visualize_clicked();
 
-    void on_pushBtn_others_clicked(bool checked);
+    void on_pushBtn_others_clicked();
 
     void on_pushBtn_start_clicked();
 
-    void on_pushButton_clicked(bool checked);
+    void on_pushButton_clicked();
 
-    void on_pushButton_3_clicked(bool checked);
+    void on_pushButton_3_clicked();
 
-    void on_pushButton_4_clicked(bool checked);
+    void on_pushButton_4_clicked();
 
-    void on_pushButton_5_clicked(bool checked);
+    void on_pushButton_5_clicked();
 
-    void on_pushButton_2_clicked(bool checked);
+    void on_pushButton_2_clicked();
 
-    void on_pushButton_6_clicked(bool checked);
+    void on_pushButton_6_clicked();
 
-    void on_pushButton_7_clicked(bool checked);
+    void on_pushButton_7_clicked();
 
-    void on_pushButton_8_clicked(bool checked);
+    void on_pushButton_8_clicked();
 
     void on_pushButton_9_clicked();
 
@@ -63,6 +65,26 @@ private slots:
     void on_pushBtn_addjob_clicked();
 
     void on_pushBtn_reset_clicked();
+
+    void on_pushButton_10_clicked();
+
+    void on_pushButton_11_clicked();
+
+    void on_pushButton_12_clicked();
+
+    void on_pushButton_13_clicked();
+
+    void on_pushButton_14_clicked();
+
+    void on_pushButton_15_clicked();
+
+    void on_pushButton_16_clicked();
+
+    void on_pushButton_17_clicked();
+
+    void on_pushButton_18_clicked();
+
+    void on_pushButton_19_clicked();
 
 private:
     Ui::mainwindow        *ui;
@@ -91,6 +113,7 @@ private:
     void                   setMyStyleSheet(QString name);
     void                   hideModules();
     void                   setAllVisiualizeBtnsUnchecked();
+    void                   setAllAddjobBtnsUnchecked();
     void                   setModulesStyleNFunctions();
     void                   setStartUpAnimation();
     void                   startWorkPageAnimation();

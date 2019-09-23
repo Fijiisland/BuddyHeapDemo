@@ -64,5 +64,6 @@
         <file>share/styleSheets/mainWork.qss</file>
         <file>share/styleSheets/WelcomeBtnStart.qss</file>
         <file>share/styleSheets/mainReset.qss</file>
+        <file>share/styleSheets/addJobBtns.qss</file>
     </qresource>
 </RCC>
